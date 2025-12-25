@@ -123,4 +123,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default Pagination Size
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the default number of items per page when
+    | paginating results. This can be overridden by passing a perPage
+    | parameter in the request.
+    |
+    */
+
+    'default_pagination_size' => env('APP_DEFAULT_PAGINATION_SIZE', 10),
+
 ];
