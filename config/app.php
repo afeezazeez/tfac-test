@@ -149,4 +149,16 @@ return [
 
     'low_stock_threshold' => env('LOW_STOCK_THRESHOLD', 5),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Email
+    |--------------------------------------------------------------------------
+    |
+    | This email address will receive low stock notifications and daily sales
+    | reports.
+    |
+    */
+
+    'admin_email' => env('ADMIN_EMAIL', 'admin@example.com'),
+
 ];
