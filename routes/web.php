@@ -19,6 +19,7 @@ Route::get('dashboard', [ProductController::class, 'index'])
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('cart', [CartController::class, 'store'])->name('cart.store');
+    Route::post('cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::put('cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('cart/items/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
 });

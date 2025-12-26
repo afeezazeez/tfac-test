@@ -2,6 +2,14 @@
 import CartItem from '@/components/CartItem.vue';
 import { Button } from '@/components/ui/button';
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
     Sheet,
     SheetContent,
     SheetDescription,
@@ -12,7 +20,7 @@ import cart from '@/routes/cart';
 import type { Cart } from '@/types';
 import { router, usePage } from '@inertiajs/vue3';
 import { ShoppingCart } from 'lucide-vue-next';
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 interface Props {
     open: boolean;
@@ -22,6 +30,8 @@ interface Props {
 const props = defineProps<Props>();
 
 const page = usePage();
+const isCheckingOut = ref(false);
+const showConfirmDialog = ref(false);
 
 const emit = defineEmits<{
     'update:open': [value: boolean];
@@ -41,6 +51,38 @@ watch(() => props.open, (isOpen) => {
         router.reload({ only: ['cart', 'cartItemCount'] });
     }
 });
+
+const showCheckoutConfirmation = () => {
+    if (!props.cart || props.cart.items.length === 0) {
+        return;
+    }
+    showConfirmDialog.value = true;
+};
+
+const handleCheckout = () => {
+    if (isCheckingOut.value || !props.cart || props.cart.items.length === 0) {
+        return;
+    }
+
+    showConfirmDialog.value = false;
+    isCheckingOut.value = true;
+
+    router.post(
+        cart.checkout().url,
+        {},
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                isCheckingOut.value = false;
+                isOpen.value = false;
+                router.reload({ only: ['cart', 'cartItemCount'] });
+            },
+            onFinish: () => {
+                isCheckingOut.value = false;
+            },
+        }
+    );
+};
 </script>
 
 <template>
@@ -76,11 +118,12 @@ watch(() => props.open, (isOpen) => {
                     </div>
 
                     <Button
-                        class="w-full"
+                        class="w-full cursor-pointer"
                         size="lg"
-                        @click="() => {}"
+                        :disabled="isCheckingOut"
+                        @click="showCheckoutConfirmation"
                     >
-                        Checkout
+                        {{ isCheckingOut ? 'Processing...' : 'Checkout' }}
                     </Button>
                 </div>
             </div>
@@ -101,5 +144,31 @@ watch(() => props.open, (isOpen) => {
             </div>
         </SheetContent>
     </Sheet>
+
+    <Dialog v-model:open="showConfirmDialog">
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Confirm Checkout</DialogTitle>
+                <DialogDescription>
+                    Are you sure you want to proceed with checkout? This will clear your cart and process the order.
+                </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+                <Button
+                    variant="outline"
+                    @click="showConfirmDialog = false"
+                >
+                    Cancel
+                </Button>
+                <Button
+                    class="cursor-pointer"
+                    @click="handleCheckout"
+                    :disabled="isCheckingOut"
+                >
+                    {{ isCheckingOut ? 'Processing...' : 'Confirm' }}
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
 </template>
 

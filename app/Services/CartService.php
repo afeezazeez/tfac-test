@@ -137,11 +137,13 @@ class CartService
     /**
      * Clear all items from cart.
      */
-    public function clearCart(int $userId): bool
+    public function clearCart(int $userId): void
     {
-        $cart = $this->getOrCreateCart($userId);
+        $cart = $this->getCartWithItems($userId);
 
-        return $this->cartItem->where('cart_id', $cart->id)->delete() > 0;
+        if ($cart) {
+            $cart->items()->delete();
+        }
     }
      
     /**
