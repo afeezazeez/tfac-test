@@ -28,9 +28,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule): void {
-        // TODO: Change back to ->dailyAt('18:00')->timezone('UTC') after testing
         $schedule->command(DailySalesReportCommand::class)
-            ->everyMinute();
+            ->dailyAt('18:00')
+            ->timezone('UTC');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ClientErrorException $e, Request $request) {
