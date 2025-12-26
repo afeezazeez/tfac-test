@@ -74,9 +74,6 @@ class CartController extends Controller
     {
         $this->cartService->clearCart($request->user()->id);
 
-        // TODO: Remove this temporary line - testing observer logging
-        \App\Models\Product::find(82)?->decrement('stock_quantity', 2);
-
         return back()->with('success', 'Order is being processed');
     }
 }
