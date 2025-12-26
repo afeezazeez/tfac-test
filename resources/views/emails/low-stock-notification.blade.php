@@ -49,16 +49,14 @@
     </style>
 </head>
 <body>
-    <div style="margin-bottom: 20px;">
-        <p>Hello,</p>
-        <p>This is to notify you that a product is running low on stock and may need to be restocked soon.</p>
-    </div>
-
     <div class="header">
         <h1 style="margin: 0;">Low Stock Alert</h1>
     </div>
 
     <div class="content">
+        <p>Hello,</p>
+        
+        <p>This is to notify you that a product is running low on stock and may need to be restocked soon.</p>
 
         <div class="alert-box">
             <h2 style="margin-top: 0; color: #dc2626;">{{ $product->name }}</h2>

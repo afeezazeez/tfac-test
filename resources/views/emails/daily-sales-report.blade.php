@@ -61,16 +61,17 @@
     </style>
 </head>
 <body>
+    <div style="margin-bottom: 20px;">
+        <p>Hello,</p>
+        <p>Please find below the daily sales report for {{ $date }}. This report contains a summary of all products sold today.</p>
+    </div>
+
     <div class="header">
         <h1>Daily Sales Report</h1>
         <p style="margin: 0;">Date: {{ $date }}</p>
     </div>
 
     <div class="content">
-        <div style="margin-bottom: 20px;">
-            <p>Hello,</p>
-            <p>Please find below the daily sales report for {{ $date }}. This report contains a summary of all products sold today.</p>
-        </div>
 
         @if(count($salesData) > 0)
             <table>
