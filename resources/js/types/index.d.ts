@@ -1,5 +1,6 @@
 import { InertiaLinkProps } from '@inertiajs/vue3';
 import type { LucideIcon } from 'lucide-vue-next';
+import type { Cart } from './cart';
 
 export interface Auth {
     user: User;
@@ -24,6 +25,8 @@ export type AppPageProps<
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    cartItemCount: number;
+    cart?: Cart | null;
 };
 
 export interface User {
@@ -45,3 +48,4 @@ export interface PaginationLink {
 }
 
 export type { Product, PaginatedProducts } from './product';
+export type { Cart, CartItem, CartItemProduct } from './cart';

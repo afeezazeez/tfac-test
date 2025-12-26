@@ -14,11 +14,16 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $threshold = config('app.low_stock_threshold');
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'price' => (float) $this->price,
             'formatted_price' => '$' . number_format($this->price, 2),
+            'stock_quantity' => $this->stock_quantity,
+            'is_out_of_stock' => $this->isOutOfStock(),
+            'is_low_stock' => $this->isLowStock($threshold),
         ];
     }
 }

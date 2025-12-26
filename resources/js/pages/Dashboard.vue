@@ -2,6 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
+import { useFlash } from '@/composables/useFlash';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { type PaginatedProducts } from '@/types/product';
@@ -13,8 +14,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
-// Debug: Check pagination data
-console.log('Products data:', props.products);
+useFlash();
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,6 +38,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </p>
                 </div>
             </div>
+
 
             <div v-if="products.data.length > 0" class="flex flex-1 flex-col gap-6">
                 <div

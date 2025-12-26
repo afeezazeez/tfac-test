@@ -136,4 +136,17 @@ return [
 
     'default_pagination_size' => env('APP_DEFAULT_PAGINATION_SIZE', 10),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Low Stock Threshold
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the threshold at which a product is considered
+    | to have low stock. When a product's stock quantity falls at or below
+    | this value, it will be marked as low stock.
+    |
+    */
+
+    'low_stock_threshold' => env('LOW_STOCK_THRESHOLD', 5),
+
 ];

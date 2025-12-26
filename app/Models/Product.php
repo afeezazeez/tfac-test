@@ -57,4 +57,12 @@ class Product extends Model
     {
         return $this->stock_quantity === 0;
     }
+
+    /**
+     * Check if product has enough stock for the requested quantity.
+     */
+    public function hasEnoughStock(int $quantity): bool
+    {
+        return $this->stock_quantity >= $quantity;
+    }
 }

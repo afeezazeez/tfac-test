@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\CartResource;
+use App\Services\CartService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -16,6 +18,10 @@ class HandleInertiaRequests extends Middleware
      * @var string
      */
     protected $rootView = 'app';
+
+    public function __construct(protected readonly CartService $cartService)
+    {
+    }
 
     /**
      * Determines the current asset version.
@@ -38,14 +44,32 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $cartCount = 0;
+        $cart = null;
+        if ($request->user()) {
+            $cartCount = $this->cartService->getItemCount($request->user()->id);
+            $cartModel = $this->cartService->getCartWithItems($request->user()->id);
+            if ($cartModel) {
+                $cart = (new CartResource($cartModel))->resolve($request);
+            }
+        }
+
+        $parentData = parent::share($request);
+
         return [
-            ...parent::share($request),
+            ...$parentData,
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'cartItemCount' => $cartCount,
+            'cart' => $cart,
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
         ];
     }
 }

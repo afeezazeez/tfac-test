@@ -1,9 +1,47 @@
 <script setup lang="ts">
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import cart from '@/routes/cart';
 import type { Product } from '@/types/product';
+import { router } from '@inertiajs/vue3';
+import { ShoppingCart } from 'lucide-vue-next';
+import { ref } from 'vue';
 
-defineProps<{
+interface Props {
     product: Product;
-}>();
+}
+
+const props = defineProps<Props>();
+
+const isAdding = ref(false);
+
+const addToCart = () => {
+    if (props.product.is_out_of_stock || isAdding.value) {
+        return;
+    }
+
+    isAdding.value = true;
+
+    router.post(
+        cart.store().url,
+        {
+            product_id: props.product.id,
+            quantity: 1,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                isAdding.value = false;
+            },
+            onFinish: () => {
+                isAdding.value = false;
+            },
+            onError: () => {
+                isAdding.value = false;
+            },
+        }
+    );
+};
 </script>
 
 <template>
@@ -34,16 +72,52 @@ defineProps<{
         </div>
 
         <div class="p-5">
-            <h3
-                class="mb-3 line-clamp-2 text-lg font-semibold leading-tight text-neutral-900 dark:text-neutral-100"
-            >
-                {{ product.name }}
-            </h3>
-            <p
-                class="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100"
-            >
-                {{ product.formatted_price }}
-            </p>
+            <div class="mb-2 flex items-center gap-2">
+                <h3
+                    class="line-clamp-2 flex-1 text-lg font-semibold leading-tight text-neutral-900 dark:text-neutral-100"
+                >
+                    {{ product.name }}
+                </h3>
+            </div>
+
+            <div class="mb-3 flex items-center gap-2">
+                <Badge
+                    v-if="product.is_out_of_stock"
+                    variant="destructive"
+                    class="text-xs"
+                >
+                    Out of Stock
+                </Badge>
+                <Badge
+                    v-else-if="product.is_low_stock"
+                    variant="secondary"
+                    class="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200"
+                >
+                    Low Stock
+                </Badge>
+                <Badge v-else variant="secondary" class="text-xs">
+                    In Stock
+                </Badge>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <p
+                    class="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100"
+                >
+                    {{ product.formatted_price }}
+                </p>
+            </div>
+
+            <div class="mt-4">
+                <Button
+                    class="w-full cursor-pointer"
+                    :disabled="product.is_out_of_stock || isAdding"
+                    @click="addToCart"
+                >
+                    <ShoppingCart class="mr-2 h-4 w-4" />
+                    {{ isAdding ? 'Adding...' : product.is_out_of_stock ? 'Out of Stock' : 'Add to Cart' }}
+                </Button>
+            </div>
         </div>
     </div>
 </template>

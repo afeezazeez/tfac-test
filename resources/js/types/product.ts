@@ -5,6 +5,9 @@ export interface Product {
     name: string;
     price: number;
     formatted_price: string;
+    stock_quantity: number;
+    is_out_of_stock: boolean;
+    is_low_stock: boolean;
 }
 
 export interface PaginatedProducts {
