@@ -66,14 +66,4 @@ class CartController extends Controller
 
         return back()->with('success', 'Item removed from cart');
     }
-
-    /**
-     * Clear cart (checkout).
-     */
-    public function checkout(Request $request): RedirectResponse
-    {
-        $this->cartService->clearCart($request->user()->id);
-
-        return back()->with('success', 'Order is being processed');
-    }
 }

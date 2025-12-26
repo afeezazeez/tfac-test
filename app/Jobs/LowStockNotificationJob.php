@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\LowStockNotificationMail;
 use App\Models\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,15 +31,8 @@ class LowStockNotificationJob implements ShouldQueue
         $adminEmail = config('app.admin_email', 'admin@example.com');
         $threshold = config('app.low_stock_threshold', 5);
 
-        Mail::raw(
-            "Product '{$this->product->name}' is running low on stock.\n\n" .
-            "Current stock: {$this->product->stock_quantity}\n" .
-            "Low stock threshold: {$threshold}\n\n" .
-            "Please consider restocking this product.",
-            function ($message) use ($adminEmail) {
-                $message->to($adminEmail)
-                    ->subject('Low Stock Alert: ' . $this->product->name);
-            }
+        Mail::to($adminEmail)->send(
+            new LowStockNotificationMail($this->product, $threshold)
         );
     }
 }

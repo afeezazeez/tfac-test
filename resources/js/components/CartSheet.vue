@@ -17,6 +17,7 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import cart from '@/routes/cart';
+import checkout from '@/routes/checkout';
 import type { Cart } from '@/types';
 import { router, usePage } from '@inertiajs/vue3';
 import { ShoppingCart } from 'lucide-vue-next';
@@ -68,7 +69,7 @@ const handleCheckout = () => {
     isCheckingOut.value = true;
 
     router.post(
-        cart.checkout().url,
+        checkout.store().url,
         {},
         {
             preserveScroll: true,

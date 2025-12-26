@@ -9,6 +9,9 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
 
+use App\Console\Commands\DailySalesReportCommand;
+use Illuminate\Console\Scheduling\Schedule;
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -23,6 +26,11 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+    })
+    ->withSchedule(function (Schedule $schedule): void {
+        // TODO: Change back to ->dailyAt('18:00')->timezone('UTC') after testing
+        $schedule->command(DailySalesReportCommand::class)
+            ->everyMinute();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ClientErrorException $e, Request $request) {
